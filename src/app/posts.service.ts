@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Post } from './post.model';
 import { Injectable } from '@angular/core';
 import { Subject, throwError } from 'rxjs';
@@ -51,8 +51,21 @@ export class PostsService {
       );
   }
   clearPosts() {
-    return this.http.delete(
-      'https://angular-http-tutorial-2a7b4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json'
-    );
+    return this.http
+      .delete(
+        'https://angular-http-tutorial-2a7b4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json',
+        {
+          observe: 'events',
+        }
+      )
+      .pipe(
+        tap({
+          next: (x) => console.log(x),
+          error: (e) => console.log(e),
+          complete: () => {
+            console.log('done!');
+          },
+        })
+      ); //perform non critical side effect
   }
 }
