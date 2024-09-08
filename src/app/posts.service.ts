@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Post } from './post.model';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {
@@ -26,15 +26,21 @@ export class PostsService {
         'https://angular-http-tutorial-2a7b4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json'
       )
       .pipe(
-        map((response) => {
-          const arr = [];
-          for (let key in response) {
-            if (response.hasOwnProperty(key)) {
-              arr.push({ ...response[key], id: key });
+        map(
+          (response) => {
+            const arr = [];
+            for (let key in response) {
+              if (response.hasOwnProperty(key)) {
+                arr.push({ ...response[key], id: key });
+              }
             }
-          }
-          return arr;
-        })
+            return arr;
+          },
+          catchError((error) => {
+            // can send the error to server for analytic
+            return throwError(error);
+          })
+        )
       );
   }
   clearPosts() {
