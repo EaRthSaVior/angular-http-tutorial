@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   loadedPosts: Post[] = [];
+  loading = false;
 
   constructor(private http: HttpClient) {}
 
@@ -36,6 +37,7 @@ export class AppComponent implements OnInit {
   }
 
   private fetchPosts() {
+    this.loading = true;
     this.http
       .get<{ [key: string]: Post }>(
         'https://angular-http-tutorial-2a7b4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json'
@@ -51,6 +53,9 @@ export class AppComponent implements OnInit {
           return arr;
         })
       )
-      .subscribe((response) => (this.loadedPosts = response));
+      .subscribe((response) => {
+        this.loading = false;
+        this.loadedPosts = response;
+      });
   }
 }
