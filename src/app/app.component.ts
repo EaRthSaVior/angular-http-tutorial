@@ -52,4 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     );
   }
+  onClearError() {
+    this.error = '';
+  }
 }
