@@ -30,4 +30,9 @@ export class PostsService {
         })
       );
   }
+  clearPosts() {
+    return this.http.delete(
+      'https://angular-http-tutorial-2a7b4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json'
+    );
+  }
 }
