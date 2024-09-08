@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { Post } from './post.model';
 import { Injectable } from '@angular/core';
@@ -13,7 +13,10 @@ export class PostsService {
     return this.http
       .post<{ name: string }>(
         'https://angular-http-tutorial-2a7b4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json',
-        postData
+        postData,
+        {
+          headers: new HttpHeaders({ 'custom-header': 'hello' }),
+        }
       )
       .subscribe(
         (response) => console.log(response),
@@ -21,9 +24,13 @@ export class PostsService {
       );
   }
   fetchPosts() {
+    let params = new HttpParams();
+    params = params.append('abc', '222');
+    params = params.append('test', '123');
     return this.http
       .get<{ [key: string]: Post }>(
-        'https://angular-http-tutorial-2a7b4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json'
+        'https://angular-http-tutorial-2a7b4-default-rtdb.asia-southeast1.firebasedatabase.app/posts.json',
+        { params: params }
       )
       .pipe(
         map(
